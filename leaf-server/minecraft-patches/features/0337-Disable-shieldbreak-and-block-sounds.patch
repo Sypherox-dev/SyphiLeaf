@@ -1,14 +1,35 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: SyphiLeaf <syphileaf@example.com>
 Date: Sun, 25 Oct 2026 21:55:00 +0100
-Subject: [PATCH] Disable shieldbreak sound
+Subject: [PATCH] Disable shieldbreak and block sounds
 
 
 diff --git a/net/minecraft/world/item/component/BlocksAttacks.java b/net/minecraft/world/item/component/BlocksAttacks.java
-index 454b97fdf142e1bc1c887627a6eeeba54e67bb7e..9999999999999999999999999999999999999999 100644
+index 8e9db734d19b2082437eaa424f33df2b3321c2cf..7ee452d009673d7058a0773f138457d7b80c8935 100644
 --- a/net/minecraft/world/item/component/BlocksAttacks.java
 +++ b/net/minecraft/world/item/component/BlocksAttacks.java
-@@ -94,17 +94,5 @@ public record BlocksAttacks(
+@@ -71,19 +71,7 @@ public record BlocksAttacks(
+     );
+ 
+     public void onBlocked(ServerLevel level, LivingEntity entity) {
+-        this.blockSound
+-            .ifPresent(
+-                sound -> level.playSound(
+-                    null,
+-                    entity.getX(),
+-                    entity.getY(),
+-                    entity.getZ(),
+-                    (Holder<SoundEvent>)sound,
+-                    entity.getSoundSource(),
+-                    1.0F,
+-                    0.8F + level.random.nextFloat() * 0.4F
+-                )
+-            );
++        // SyphiLeaf - Disable shield block sound
+     }
+ 
+     public void disable(ServerLevel level, LivingEntity entity, float duration, ItemStack stack, LivingEntity attacker) { // Paper
+@@ -98,19 +86,7 @@ public record BlocksAttacks(
              }
  
              entity.stopUsingItem();
@@ -28,3 +49,4 @@ index 454b97fdf142e1bc1c887627a6eeeba54e67bb7e..99999999999999999999999999999999
 +            // SyphiLeaf - Disable shieldbreak sound
          }
      }
+ 
