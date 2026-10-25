@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: SyphiLeaf <syphileaf@example.com>
+Date: Sun, 25 Oct 2026 21:55:00 +0100
+Subject: [PATCH] Disable shieldbreak sound
+
+
+diff --git a/net/minecraft/world/item/component/BlocksAttacks.java b/net/minecraft/world/item/component/BlocksAttacks.java
+index 454b97fdf142e1bc1c887627a6eeeba54e67bb7e..9999999999999999999999999999999999999999 100644
+--- a/net/minecraft/world/item/component/BlocksAttacks.java
++++ b/net/minecraft/world/item/component/BlocksAttacks.java
+@@ -94,17 +94,5 @@ public record BlocksAttacks(
+             }
+ 
+             entity.stopUsingItem();
+-            this.disableSound
+-                .ifPresent(
+-                    sound -> level.playSound(
+-                        null,
+-                        entity.getX(),
+-                        entity.getY(),
+-                        entity.getZ(),
+-                        (Holder<SoundEvent>)sound,
+-                        entity.getSoundSource(),
+-                        0.8F,
+-                        0.8F + level.random.nextFloat() * 0.4F
+-                    )
+-                );
++            // SyphiLeaf - Disable shieldbreak sound
+         }
+     }

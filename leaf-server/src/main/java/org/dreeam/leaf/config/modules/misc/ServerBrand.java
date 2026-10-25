@@ -9,8 +9,8 @@ public class ServerBrand extends ConfigModules {
         return EnumConfigCategory.MISC.getBaseKeyName() + ".rebrand";
     }
 
-    public static String serverModName = io.papermc.paper.ServerBuildInfo.buildInfo().brandName();
-    public static String serverGUIName = io.papermc.paper.ServerBuildInfo.buildInfo().brandName() + " Console";
+    public static String serverModName = "SyphiLeaf";
+    public static String serverGUIName = "SyphiLeaf Console";
 
     @Override
     public void onLoaded() {

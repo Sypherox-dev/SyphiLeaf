@@ -534,7 +534,7 @@ index 74ffdc823e66fc5ec027c4b7c462382bcbfe2be2..ca846f76d5ff53c547e1ce943e4e68cf
 +    // Leaf start - Rebrand
 +    private static final String BRAND_PUFFERFISH_NAME = "Pufferfish";
 +    private static final String BRAND_PURPUR_NAME = "Purpur";
-+    private static final String BRAND_LEAF_NAME = "Leaf";
++    private static final String BRAND_LEAF_NAME = "SyphiLeaf";
 +    // Leaf end - Rebrand
  
      private static final String BUILD_DEV = "DEV";
