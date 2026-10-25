@@ -4,6 +4,21 @@ Date: Sun, 25 Oct 2026 21:55:00 +0100
 Subject: [PATCH] Disable shieldbreak and block sounds
 
 
+diff --git a/net/minecraft/world/item/Items.java b/net/minecraft/world/item/Items.java
+index 310e61a9bbece157d81095130ecb3131deef9288..7b26b8cfb08de85c5038ec3c2c4b450bd1641e59 100644
+--- a/net/minecraft/world/item/Items.java
++++ b/net/minecraft/world/item/Items.java
+@@ -1963,8 +1963,8 @@ public class Items {
+                     List.of(new BlocksAttacks.DamageReduction(90.0F, Optional.empty(), 0.0F, 1.0F)),
+                     new BlocksAttacks.ItemDamageFunction(3.0F, 1.0F, 1.0F),
+                     Optional.of(DamageTypeTags.BYPASSES_SHIELD),
+-                    Optional.of(SoundEvents.SHIELD_BLOCK),
+-                    Optional.of(SoundEvents.SHIELD_BREAK)
++                    Optional.empty(), // SyphiLeaf - Disable shield sounds
++                    Optional.empty() // SyphiLeaf - Disable shield sounds
+                 )
+             )
+             .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK)
 diff --git a/net/minecraft/world/item/component/BlocksAttacks.java b/net/minecraft/world/item/component/BlocksAttacks.java
 index 8e9db734d19b2082437eaa424f33df2b3321c2cf..7ee452d009673d7058a0773f138457d7b80c8935 100644
 --- a/net/minecraft/world/item/component/BlocksAttacks.java
