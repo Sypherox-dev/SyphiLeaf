@@ -22,6 +22,8 @@ build
 build-data/dev-imports.txt
 leaf-archived-patches/todo
 run
+bin/
+**/bin/
 
 leaf-api/build.gradle.kts
 leaf-server/build.gradle.kts

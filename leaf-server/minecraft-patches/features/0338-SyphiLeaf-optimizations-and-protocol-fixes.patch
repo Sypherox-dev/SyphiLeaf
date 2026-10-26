@@ -1,0 +1,51 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: SyphiLeaf <syphileaf@example.com>
+Date: Mon, 26 Oct 2026 22:30:00 +0100
+Subject: [PATCH] SyphiLeaf optimizations and protocol fixes
+
+
+diff --git a/ca/spottedleaf/moonrise/patches/chunk_system/level/entity/ChunkEntitySlices.java b/ca/spottedleaf/moonrise/patches/chunk_system/level/entity/ChunkEntitySlices.java
+index 2dfd4123..b533aba1 100644
+--- a/ca/spottedleaf/moonrise/patches/chunk_system/level/entity/ChunkEntitySlices.java
++++ b/ca/spottedleaf/moonrise/patches/chunk_system/level/entity/ChunkEntitySlices.java
+@@ -217,6 +217,12 @@ public final class ChunkEntitySlices {
+         return this.entities.size() == 0;
+     }
+ 
++    // SyphiLeaf start - Dense collision culler
++    public int getEntityCount() {
++        return this.entities.size();
++    }
++    // SyphiLeaf end - Dense collision culler
++
+     public void mergeInto(final ChunkEntitySlices slices) {
+         final Entity[] entities = this.entities.getRawData();
+         for (int i = 0, size = Math.min(entities.length, this.entities.size()); i < size; ++i) {
+diff --git a/net/minecraft/network/Connection.java b/net/minecraft/network/Connection.java
+index 92b024ee..829b47e5 100644
+--- a/net/minecraft/network/Connection.java
++++ b/net/minecraft/network/Connection.java
+@@ -727,6 +727,9 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
+     }
+ 
+     public void configurePacketHandler(ChannelPipeline pipeline) {
++        // SyphiLeaf start - Inbound AntiCheat & Rate-Limit Interceptor
++        org.dreeam.leaf.network.NettyInboundInterceptor.inject(pipeline, this);
++        // SyphiLeaf end - Inbound AntiCheat & Rate-Limit Interceptor
+         pipeline.addLast("hackfix", new ChannelOutboundHandlerAdapter() {
+             @Override
+             public void write(ChannelHandlerContext channelHandlerContext, Object object, ChannelPromise channelPromise) throws Exception {
+diff --git a/net/minecraft/network/protocol/ProtocolInfoBuilder.java b/net/minecraft/network/protocol/ProtocolInfoBuilder.java
+index 47b228a9..df18297e 100644
+--- a/net/minecraft/network/protocol/ProtocolInfoBuilder.java
++++ b/net/minecraft/network/protocol/ProtocolInfoBuilder.java
+@@ -41,7 +41,8 @@ public class ProtocolInfoBuilder<T extends PacketListener, B extends ByteBuf, C>
+         PacketType<P> type, Function<Iterable<Packet<? super T>>, P> bundler, D packet
+     ) {
+         StreamCodec<ByteBuf, D> streamCodec = StreamCodec.unit(packet);
+-        PacketType<D> packetType = (PacketType<D>)packet.type();
++        @SuppressWarnings("unchecked")
++        PacketType<D> packetType = (PacketType<D>) (PacketType<?>) packet.type();
+         this.codecs.add(new ProtocolInfoBuilder.CodecEntry<>(packetType, streamCodec, null));
+         this.bundlerInfo = BundlerInfo.createForPacket(type, bundler, packet);
+         return this;
