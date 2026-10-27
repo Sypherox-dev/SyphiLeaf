@@ -25,16 +25,22 @@ diff --git a/net/minecraft/network/Connection.java b/net/minecraft/network/Conne
 index 92b024ee..829b47e5 100644
 --- a/net/minecraft/network/Connection.java
 +++ b/net/minecraft/network/Connection.java
-@@ -727,6 +727,9 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
+@@ -727,10 +727,15 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
      }
  
      public void configurePacketHandler(ChannelPipeline pipeline) {
-+        // SyphiLeaf start - Inbound AntiCheat & Rate-Limit Interceptor
-+        org.dreeam.leaf.network.NettyInboundInterceptor.inject(pipeline, this);
-+        // SyphiLeaf end - Inbound AntiCheat & Rate-Limit Interceptor
          pipeline.addLast("hackfix", new ChannelOutboundHandlerAdapter() {
              @Override
              public void write(ChannelHandlerContext channelHandlerContext, Object object, ChannelPromise channelPromise) throws Exception {
+                 super.write(channelHandlerContext, object, channelPromise);
+             }
+         }).addLast("packet_handler", this);
++        // SyphiLeaf start - Inbound AntiCheat & Rate-Limit Interceptor
++        // inject() must be called AFTER packet_handler is added, since addBefore("packet_handler", ...)
++        // requires that handler to already exist in the pipeline (fixes NoSuchElementException on init).
++        org.dreeam.leaf.network.NettyInboundInterceptor.inject(pipeline, this);
++        // SyphiLeaf end - Inbound AntiCheat & Rate-Limit Interceptor
+     }
 diff --git a/net/minecraft/network/protocol/ProtocolInfoBuilder.java b/net/minecraft/network/protocol/ProtocolInfoBuilder.java
 index 47b228a9..df18297e 100644
 --- a/net/minecraft/network/protocol/ProtocolInfoBuilder.java
