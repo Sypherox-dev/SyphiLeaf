@@ -1,0 +1,32 @@
+From 70e3107b16523ee10ed2d9763d76bc56d4d25e88 Mon Sep 17 00:00:00 2001
+From: zgodsw <140208778+zgodsw@users.noreply.github.com>
+Date: Sat, 31 Oct 2026 15:11:27 +0100
+Subject: [PATCH] Instant XP Orb Pickup (SyphiLeaf)
+
+---
+ net/minecraft/world/entity/ExperienceOrb.java | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/net/minecraft/world/entity/ExperienceOrb.java b/net/minecraft/world/entity/ExperienceOrb.java
+index 7487d0d..b219bb0 100644
+--- a/net/minecraft/world/entity/ExperienceOrb.java
++++ b/net/minecraft/world/entity/ExperienceOrb.java
+@@ -354,6 +354,15 @@ public class ExperienceOrb extends Entity {
+     @Override
+     public void playerTouch(Player entity) {
+         if (entity instanceof ServerPlayer serverPlayer) {
++            // Leaf start - Instant XP Orb Pickup
++            // If the feature is enabled, force the cooldown to 0 so the pickup-gate below
++            // always opens. This eliminates the standard 2-tick (or Purpur-configured) delay
++            // and lets high-count orb stacks get absorbed immediately, reducing entity ticks.
++            // All downstream Bukkit/Paper events are still fired normally.
++            if (org.dreeam.leaf.config.modules.gameplay.InstantXpOrbPickup.enabled) {
++                entity.takeXpDelay = 0;
++            }
++            // Leaf end - Instant XP Orb Pickup
+             if (entity.takeXpDelay == 0 && new com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent(serverPlayer.getBukkitEntity(), (org.bukkit.entity.ExperienceOrb) this.getBukkitEntity()).callEvent()) { // Paper - PlayerPickupExperienceEvent
+                 entity.takeXpDelay = org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerXpCooldownEvent(entity, this.level().purpurConfig.playerExpPickupDelay, org.bukkit.event.player.PlayerExpCooldownChangeEvent.ChangeReason.PICKUP_ORB).getNewCooldown(); // CraftBukkit - entity.takeXpDelay = 2; // Purpur - Configurable player pickup exp delay
+                 entity.take(this, 1);
+-- 
+2.45.1.windows.1
+
